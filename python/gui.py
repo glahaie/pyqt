@@ -6,6 +6,7 @@
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from creationvol import CreationVol
 
 class GUI(QMainWindow):
     def __init__(self, args):
@@ -14,18 +15,31 @@ class GUI(QMainWindow):
         self.setWindowTitle("Gestion des vols")
         self.resize(1000,600)
 
+        #Centrer la fenêtre
+        self.move(QApplication.desktop().screen().rect().center()- self.rect().center())
+
         #widget central : QTextEdit
-#        self.edit = QTextEdit("editor", self.main)
-#        self.edit.setFocus()
-#        self.main.setCentralWidget(self.edit)
+#        self.edit = QTextEdit("editor", self)
+#        self.vbox = QVBoxLayout()
+#        self.top = CreationVol()
+#        self.vbox.addWidget(self.top)
+        #on ajoute l'éditeur
+#        self.vbox.addWidget(self.edit)
+
+
+        self.vol = CreationVol()
+        self.main = QStackedWidget()
+        self.main.addWidget(self.vol)
+        self.stuff = QLabel(u"STUFF")
+        self.main.addWidget(self.stuff)
+
+        self.setCentralWidget(self.main)
+
 
         # ajout facile d'éléments dans la barre de menu
         # NOTE : crée la barre s'il n'existe pas
         self.__creerMenu()
-
         self.show()
-#        self.connect(self,SIGNAL("lastWindowClosed()"),self,SLOT("quit()"))
-#        self.exec_()
 
     def __creerMenu(self):
         """Crée les menus et les events pour faire qqch"""
@@ -38,12 +52,20 @@ class GUI(QMainWindow):
         quitter = QAction("&Quitter", self)
         quitter.setShortcut('Ctrl+Q')
         quitter.triggered.connect(qApp.quit)
+        quitter.setStatusTip("Quitter l'application")
+
+        #Test pour changer le widget
+        creerVol = QAction(u"Créer un vol", self)
+        creerVol.triggered.connect(self.creerVol)
+
+        supprimerVol = QAction(u"Supprimer un vol", self)
+        supprimerVol.triggered.connect(self.supprimerVol)
 
         fichier.addAction(quitter)
 
         menuVol = menuBar.addMenu("&Vols")
-        menuVol.addAction(u"Créer un vol")
-        menuVol.addAction("Supprimer un vol")
+        menuVol.addAction(creerVol)
+        menuVol.addAction(supprimerVol)
         menuVol.addAction(u"Afficher les détails d'un vol")
         menuVol.addAction("Afficher tous les vols")
 
@@ -55,6 +77,16 @@ class GUI(QMainWindow):
         # changement du message de status
         # NOTE : crée la zone de status si inexistante
         self.statusBar().showMessage("Gestion des vols", 10000)
+
+
+    def creerVol(self):
+        """On change le widget"""
+        self.main.setCurrentWidget(self.vol)
+
+    def supprimerVol(self):
+        """On change le widget"""
+        self.main.setCurrentWidget(self.stuff)
+
 
 
 def main():
