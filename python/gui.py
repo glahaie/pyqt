@@ -26,14 +26,7 @@ class GUI(QMainWindow):
         #on ajoute l'éditeur
 #        self.vbox.addWidget(self.edit)
 
-
-        self.vol = CreationVol()
-        self.main = QStackedWidget()
-        self.main.addWidget(self.vol)
-        self.stuff = QLabel(u"STUFF")
-        self.main.addWidget(self.stuff)
-
-        self.setCentralWidget(self.main)
+        self.setCentralWidget(Test())
 
 
         # ajout facile d'éléments dans la barre de menu
@@ -86,6 +79,26 @@ class GUI(QMainWindow):
     def supprimerVol(self):
         """On change le widget"""
         self.main.setCurrentWidget(self.stuff)
+
+class Test(QWidget):
+    """Essai pour mettre deux widgets un après l'autre"""
+
+    def __init__(self):
+        super(Test, self).__init__()
+
+        self.edit = QTextEdit("Ouverture de l'application", self)
+
+        self.main = QTabWidget()
+        self.main.addTab(CreationVol(), u"Créer un vol")
+        self.stuff = QLabel(u"STUFF")
+        self.main.addTab(self.stuff, u"STUFF")
+
+        self.vbox = QVBoxLayout()
+        self.vbox.addWidget(self.main)
+        self.vbox.addWidget(self.edit)
+        self.setLayout(self.vbox)
+
+
 
 
 
